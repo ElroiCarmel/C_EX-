@@ -22,6 +22,7 @@ int main()
     // printf("%d\n", StrList_isSorted(myList));
     StrList_remove(myList, "hello");
     StrList_print(myList);
+    StrList_printAt(myList, 1);
 
     return 0;
 }
