@@ -162,7 +162,28 @@ int StrList_count(StrList* StrList, const char* data) {
 /*
 	Given a string and a list, remove all the appearences of this string in the list.
 */
-void StrList_remove(StrList* StrList, const char* data);
+void StrList_remove(StrList* StrList, const char* data) {
+    Node* prev = StrList->_head;
+    Node* curr = prev->_next;
+    while (curr->_next) {
+        if (strcmp(curr->string, data) == 0) {
+            Node* to_remove = curr;
+            prev->_next = curr->_next;
+            curr = curr->_next;
+            Node_free(to_remove);
+            StrList->_size = StrList->_size - 1;
+        } else {
+            prev = prev->_next;
+            curr = curr->_next;
+        }      
+    }
+    if (strcmp(StrList->_head->string, data) == 0) {
+        StrList_removeAt(StrList, 0);
+    }
+    if (strcmp(StrList->_tail->string, data) == 0) {
+        StrList_removeAt(StrList, StrList->_size-1);
+    }
+}
 
 /*
 	Given an index and a list, remove the string at that index.
@@ -201,13 +222,34 @@ void StrList_removeAt(StrList* StrList, int index) {
  * Checks if two StrLists have the same elements
  * returns 0 if not and any other number if yes
  */
-int StrList_isEqual(const StrList* StrList1, const StrList* StrList2);
+int StrList_isEqual(const StrList* StrList1, const StrList* StrList2) {
+    const Node* p1 = StrList1->_head;
+    const Node* p2 = StrList2->_head;
+    while (p1) {
+        if (p2 == NULL || strcmp(p1->string, p2->string)) return 0;
+        p1 = p1->_next;
+        p2 = p2->_next;
+    }
+    if (p2) return 0;
+    return 1;
+}
 
 /*
  * Clones the given StrList. 
  * It's the user responsibility to free it with StrList_free.
  */
-StrList* StrList_clone(const StrList* StrList);
+StrList* StrList_clone(const StrList* Strlist) {
+    StrList* ans = StrList_alloc();
+    const Node* old = Strlist->_head;
+    Node** copy = &(ans->_head);
+    ans->_size = Strlist->_size;
+    while (old) {
+        *copy = Node_alloc(old->string, NULL);
+        old = old->_next;
+        copy = &((*copy)->_next);
+    }
+    return ans;
+}
 
 /*
  * Reverces the given StrList. 
@@ -230,7 +272,25 @@ void StrList_reverse( StrList* StrList) {
 /*
  * Sort the given list in lexicographical order 
  */
-void StrList_sort( StrList* StrList);
+void StrList_sort( StrList* StrList) {
+    char** temp = (char**)malloc(sizeof(char*)*(StrList->_size));
+    size_t i = 0;
+    Node* p = StrList->_head;
+    while (p) {
+        temp[i] = p->string;
+        i++;
+        p = p->_next;
+    }
+    mergeSort(temp, 0, i-1);
+    p = StrList->_head;
+    i = 0;
+    while (p) {
+        p->string = temp[i];
+        p = p->_next;
+        i++;
+    }
+    free(temp);
+}
 
 /*
  * Checks if the given list is sorted in lexicographical order
@@ -246,6 +306,54 @@ int StrList_isSorted(StrList* StrList) {
         {
             return 0;
         }
+        np = np->_next;
     }
     return 1;
+}
+
+// My help functions
+
+void mergeSort(char** string_arr, size_t start, size_t end) {
+    if (end <= start) return;
+    size_t mid = (start + end)/2;
+    mergeSort(string_arr, start, mid);
+    mergeSort(string_arr, mid+1, end);
+    merge(string_arr, start, mid, end);
+}
+
+void merge(char** string_arr, size_t l, size_t m, size_t r) {
+    size_t i, j, k;
+    size_t ls = m-l+1, rs = r-m;
+    char** left = (char**)malloc(sizeof(char*)*(ls));
+    char** right = (char**)malloc(sizeof(char*)*(rs));
+    for (i  = 0; i < ls; i++) {
+        left[i] = string_arr[l+i];
+    }
+    for (i = 0; i < rs; i++) {
+        right[i] = string_arr[m+1+i];
+    }
+    i = j = 0;
+    k = l;
+    while (i < ls && j < rs) {
+        if (strcmp(left[i], right[j]) <= 0) {
+            string_arr[k] = left[i];
+            i++;
+        } else {
+            string_arr[k] = right[j];
+            j++;
+        }
+        k++;
+    }
+    while (i < ls) {
+        string_arr[k] = left[i];
+        i++;
+        k++;
+    }
+    while (j < rs) {
+        string_arr[k] = right[j];
+        j++;
+        k++;
+    }
+    free(left);
+    free(right);
 }

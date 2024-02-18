@@ -111,3 +111,9 @@ void StrList_sort( StrList* StrList);
  */
 int StrList_isSorted(StrList* StrList);
 
+// My private helper functions
+
+void mergeSort(char** string_arr, size_t start, size_t end);
+
+void merge(char** string_arr, size_t l, size_t m, size_t r);
+
