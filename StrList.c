@@ -212,7 +212,20 @@ StrList* StrList_clone(const StrList* StrList);
 /*
  * Reverces the given StrList. 
  */
-void StrList_reverse( StrList* StrList);
+void StrList_reverse( StrList* StrList) {
+    if (StrList->_size <= 1) return;
+    Node *p1 = StrList->_head, *p2 = p1->_next;
+    while (p2) {
+        Node* p3 = p2->_next;
+        p2->_next = p1;
+        p1 = p2;
+        p2 = p3;
+    }
+    Node* temp = StrList->_head;
+    StrList->_head = StrList->_tail;
+    StrList->_tail = temp;
+    StrList->_tail->_next = NULL;
+}
 
 /*
  * Sort the given list in lexicographical order 

@@ -14,6 +14,7 @@ int main()
     StrList_print(myList);
     StrList_removeAt(myList, 4);
     StrList_print(myList);
-
+    StrList_reverse(myList);
+    StrList_print(myList);
     return 0;
 }
