@@ -4,11 +4,16 @@
 
 int main()
 {
-    printf("size of const int: %ld\n", sizeof(const int));
-    printf("size of int: %ld\n", sizeof(int));
-    const int num = 45;
-    const int *ptr = &num;
-    int num2 = 22;
-    ptr = &num2;
+    StrList* myList = StrList_alloc();
+    StrList_insertLast(myList, "hello");
+    StrList_insertLast(myList, "elroi");
+    StrList_print(myList);
+    StrList_insertAt(myList, "insetedStrart", 0);
+    StrList_print(myList);
+    StrList_insertAt(myList, "insetedBetween", 1);
+    StrList_print(myList);
+    StrList_removeAt(myList, 4);
+    StrList_print(myList);
+
     return 0;
 }

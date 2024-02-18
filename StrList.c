@@ -16,7 +16,7 @@ struct _StrList {
 
 // Node
 
-Node* Node_alloc(char* string, Node* next) {
+Node* Node_alloc(const char* string, Node* next) {
     Node* p = (Node*)malloc(sizeof(Node));
     p->string = (char*)malloc(sizeof(char)*strlen(string)+1);
     strcpy(p->string, string);
@@ -89,9 +89,7 @@ void StrList_insertAt(StrList* StrList, const char* data,int index) {
     {
         new_node = Node_alloc(data, StrList->_head);
         StrList->_head = new_node;
-        StrList->_size = StrList->_size + 1;
-        return;
-    }
+    } else {
     Node* nptr = StrList->_head;
     while (--index)
     {
@@ -99,6 +97,7 @@ void StrList_insertAt(StrList* StrList, const char* data,int index) {
     }
     new_node = Node_alloc(data, nptr->_next);
     nptr->_next = new_node;
+    }
     StrList->_size = StrList->_size + 1;
 }
 
@@ -111,7 +110,9 @@ void StrList_print(const StrList* StrList) {
     Node* nptr = StrList->_head;
     while (nptr) {
         printf("%s ", nptr->string);
+        nptr = nptr->_next;
     }
+    printf("\n");
 }
 
 void StrList_printAt(const StrList* Strlist,int index) {
@@ -122,7 +123,7 @@ void StrList_printAt(const StrList* Strlist,int index) {
         return;
     }
     Node* np = Strlist->_head;
-    while (index-- && np)
+    while (--index > 0)
     {
         np = np->_next;
     }
@@ -173,23 +174,25 @@ void StrList_removeAt(StrList* StrList, int index) {
         printf("Error! index is not valid\n");
         return;
     }
+    Node *to_remove = NULL, *prev = NULL;
     if (index == 0)
     {
-        if (StrList->_head->_next)
-        {
-            StrList->_head = StrList->_head->_next;
+        to_remove = StrList->_head;
+        StrList->_head = StrList->_head->_next;
+        if (StrList->_tail == to_remove) {
+            StrList->_tail = StrList->_head;
         }
-        Node_free(StrList->_head);
-        StrList->_size = size -1;
-        return;
+    } else {
+        prev = StrList->_head;
+        while (--index) {
+            prev = prev->_next;
+        }   
+        to_remove = prev->_next;
+        prev->_next = to_remove->_next;
+        if (StrList->_tail == to_remove) {
+            StrList->_tail = prev;
+        }
     }
-    Node* nptr = StrList->_head;
-    while (index = index -1)
-    {
-        nptr = nptr->_next;
-    }
-    Node * to_remove = nptr->_next;
-    nptr->_next = to_remove->_next;
     Node_free(to_remove);
     StrList->_size = size - 1;
 }
