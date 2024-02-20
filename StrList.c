@@ -107,12 +107,13 @@ char* StrList_firstData(const StrList* StrList) {
 }
 
 void StrList_print(const StrList* StrList) {
+    if (StrList == NULL || !StrList->_head) return;
     Node* nptr = StrList->_head;
-    while (nptr) {
+    while (nptr->_next) {
         printf("%s ", nptr->_data);
         nptr = nptr->_next;
     }
-    printf("\n");
+    printf("%s", nptr->_data);
 }
 
 void StrList_printAt(const StrList* Strlist,int index) {
@@ -155,6 +156,7 @@ int StrList_count(StrList* StrList, const char* data) {
     {
         char* current_string = np->_data;
         if (strcmp(current_string, data) == 0) ans++;
+        np = np->_next;
     }
     return ans;
 }
@@ -164,6 +166,7 @@ int StrList_count(StrList* StrList, const char* data) {
 */
 void StrList_remove(StrList* StrList, const char* data) {
     Node* prev = StrList->_head;
+    if (prev == NULL) return;
     Node* curr = prev->_next;
     while (curr) {
         if (strcmp(curr->_data, data) == 0) {
