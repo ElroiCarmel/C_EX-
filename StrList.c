@@ -18,6 +18,10 @@ struct _StrList {
 
 Node* Node_alloc(const char* string, Node* next) {
     Node* p = (Node*)malloc(sizeof(Node));
+    if (!p) {
+        printf("Error! Out of memory...\n");
+        exit(1);
+    } 
     p->_data = (char*)malloc(sizeof(char)*strlen(string)+1);
     strcpy(p->_data, string);
     p->_next = next;
@@ -37,6 +41,10 @@ void Node_free(Node* node) {
 
 StrList* StrList_alloc() {
     StrList* p = (StrList*)malloc(sizeof(StrList));
+    if (!p) {
+        printf("Error! Out of memory...\n");
+        exit(1);
+    } 
     p->_head = p->_tail = NULL;
     p->_size = 0;
     return p;
@@ -128,6 +136,7 @@ void StrList_printAt(const StrList* Strlist,int index) {
     {
         np = np->_next;
     }
+    if (!np) return;
     char* ans = np->_data;
     printf("%s\n", ans);
 }
@@ -165,8 +174,8 @@ int StrList_count(StrList* StrList, const char* data) {
 	Given a string and a list, remove all the appearences of this string in the list.
 */
 void StrList_remove(StrList* StrList, const char* data) {
+    if (StrList == NULL || !StrList->_head) return;
     Node* prev = StrList->_head;
-    if (prev == NULL) return;
     Node* curr = prev->_next;
     while (curr) {
         if (strcmp(curr->_data, data) == 0) {
@@ -242,7 +251,7 @@ int StrList_isEqual(const StrList* StrList1, const StrList* StrList2) {
  * It's the user responsibility to free it with StrList_free.
  */
 StrList* StrList_clone(const StrList* Strlist) {
-    StrList* ans = StrList_alloc();
+    StrList* ans = StrList_alloc(); 
     const Node* old = Strlist->_head;
     Node** copy = &(ans->_head);
     ans->_size = Strlist->_size;
@@ -277,6 +286,10 @@ void StrList_reverse( StrList* StrList) {
  */
 void StrList_sort( StrList* StrList) {
     char** temp = (char**)malloc(sizeof(char*)*(StrList->_size));
+    if (!temp) {
+        printf("Error! Out of memory...\n");
+        exit(1);
+    } 
     size_t i = 0;
     Node* p = StrList->_head;
     while (p) {
