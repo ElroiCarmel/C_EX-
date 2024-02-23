@@ -87,6 +87,7 @@ void StrList_insertLast(StrList* StrList, const char* data) {
 
 void StrList_insertAt(StrList* StrList, const char* data,int index) {
     size_t lst_size = StrList->_size;
+    if (index < 0 || index >= lst_size) return;
     if (index == lst_size)
     {
         StrList_insertLast(StrList, data);

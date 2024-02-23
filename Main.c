@@ -13,15 +13,17 @@ int main()
         switch (option)
         {
         case 1:
-            int wc, i;
-            scanf("%d", &wc);
+            int wc = 0, i;
+            while (scanf("%d", &wc) != 1) {
+                getchar();
+            }
             for (i = 0; i < wc; i++) {
                 scanf(" %s", word);
                 StrList_insertLast(list, word);
             }
             break;
         case 2:
-            int index;
+            int index = 0;
             scanf("%d", &index);
             scanf(" %s", word);
             StrList_insertAt(list, word, index);
@@ -34,7 +36,6 @@ int main()
             printf("%ld\n", StrList_size(list));
             break;
         case 5:
-            // int index;
             scanf("%d", &index);
             StrList_printAt(list, index);
             break;
@@ -52,7 +53,6 @@ int main()
             StrList_remove(list, word);
             break;
         case 9:
-            // int index;
             scanf("%d", &index);
             StrList_removeAt(list, index);
             break;
